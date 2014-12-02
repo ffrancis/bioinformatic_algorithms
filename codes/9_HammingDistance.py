@@ -24,10 +24,8 @@ t0 = time.time()
 #Input file
 with open ('../data/dataset_9_3.txt') as input_data:
 	lines = input_data.readlines()
-	
 	sequences = [line.strip() for line in lines]
-	print (sequences)
-	#sequences = [line.strip() for line in input_data.readlines()]
+	#print (sequences)
 	p = sequences[0]
 	q = sequences[1]
 	
