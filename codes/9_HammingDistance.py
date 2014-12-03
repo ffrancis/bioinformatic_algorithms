@@ -2,7 +2,7 @@
 
 '''
 
-Compiled by Felix Francis
+Compiled by Felix Francis (felixfrancier@gmail.com)
 
 Description:    Position i in k-mers pi .... pk and qi .... qk is a mismatch if pi != qi.
 		For example, CGAAT and CGGAC have two mismatches.

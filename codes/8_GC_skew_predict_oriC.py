@@ -2,7 +2,7 @@
 
 '''
 
-Compiled by Felix Francis
+Compiled by Felix Francis (felixfrancier@gmail.com)
 
 Description:    We can compute Skewi+1(Genome) from Skewi(Genome) according to the nucleotide in position i of Genome.
 		If this nucleotide is G, then Skewi+1(Genome) = Skewi(Genome) + 1;
