@@ -35,8 +35,7 @@ t0 = time.time()
 
 
 
-
-
+##
 ##Test data
 #
 sequence 	= "ACGTTGCATGTCGCATGATGCATGAGAGCT"
