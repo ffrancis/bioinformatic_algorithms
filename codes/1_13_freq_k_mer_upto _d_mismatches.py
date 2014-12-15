@@ -75,13 +75,54 @@ def approx_pattern_match(query, sequence, max_mismatch):
 
 
 
-def k_mer_patters(seq, max_mismatch):
+#def k_mer_patters(seq, max_mismatch):
 	
+query_list2 = 
+
+def k_mer_variants(pattern, max_mismatch)
+
 
 
 
 
 '''
+	for i in xrange(len(sequence)-len(query)+1):
+		pattern = sequence [i:i+len(query)]
+
+'''
+
+
+
+'''
+Generate max_mismatch variants of k-mers
+
+from copy import deepcopy
+
+ch = ['a','t','c','g']
+d = {}
+t = ['a', 't', 't']
+
+def compute_replacements(s):
+    for i in xrange(len(s)):
+        for c in ch:
+            if c!=s[i]:
+                new_t = deepcopy(s)
+                new_t[i] = c
+                if tuple(new_t) not in d:
+                    d[tuple(new_t)] = 0
+
+d[tuple(t)] = 0
+compute_replacements(t)
+new_d = deepcopy(d)
+for r in new_d:
+    compute_replacements(list(r))
+for r in d:
+    print list(r)
+
+'''
+
+
+
 import itertools
 query_list = map(''.join, itertools.product('ATGC', repeat= int(k)))
 #print (query_list)
@@ -91,7 +132,7 @@ for key in k_mer_dict.keys():
 	out_put_list = approx_pattern_match(key, sequence, max_mismatch) 
 	out_put = len(out_put_list)
 	k_mer_dict [key] = out_put
-'''	
+
 	
 	
 	
