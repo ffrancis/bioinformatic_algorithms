@@ -12,7 +12,8 @@ Description:    If we remove the final symbol from all lexicographically ordered
 
 		where SymbolToNumber(symbol) is the function transforming symbols A, C, G, and T into the respective integers 0, 1, 2, and 3.
 
-Example:
+Example:	Thus, the number of 3-mers occurring before AGT is equal to four times the number of 2-mers occurring before AG plus
+		the number of 1-mers occurring before T.
 
 '''
 ############################################################
