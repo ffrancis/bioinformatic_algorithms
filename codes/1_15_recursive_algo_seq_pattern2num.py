@@ -52,7 +52,7 @@ def pattern2number(pattern):
 		return (4*(pattern2number(pattern))) + symbol2number(symbol)
 
 	
-pattern = "AGT"
+pattern = "gc"
 print(pattern2number(pattern))
 
 
