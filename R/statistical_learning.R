@@ -1,7 +1,7 @@
 # CHAPTER 1
 advertising <- read.csv("http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv")
 
-head(advertising, n=3)
+#head(advertising, n=3)
 
 names(advertising)
 
