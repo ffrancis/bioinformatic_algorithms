@@ -40,3 +40,28 @@ attach(mtcars)
 scatter3d(wt, disp, mpg)
 
 scatter3d(Education, Seniority, Income)
+
+
+### prediction accuracy vs model interpretability 
+
+plot(1:10, xaxt = "n", xlab='Some Letters')
+axis(1, at=1:10, labels=letters[1:10])
+
+plot(1:2, xaxt = "n", xlab='Some Letters')
+axis(1, at=1:2, labels=letters[1:2])
+
+
+### clustering
+library(cluster)
+#install.packages("fpc")
+library(fpc)
+
+data(iris)
+dat <- iris[, -5] # without known classification 
+clus <- kmeans(dat, centers=3)# Kmeans clustre analysis
+clusplot(dat, clus$cluster, color=TRUE, shade=TRUE, 
+         labels=2, lines=0)
+
+
+
+
