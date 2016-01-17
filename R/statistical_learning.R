@@ -62,6 +62,12 @@ clus <- kmeans(dat, centers=3)# Kmeans clustre analysis
 clusplot(dat, clus$cluster, color=TRUE, shade=TRUE, 
          labels=2, lines=0)
 
+### Latex equation, image, url, html generator: http://www.codecogs.com/latex/eqneditor.php
+### Assessing model accuracy
+### Measuring quality of fit
+### MSE: MSE = \frac{1}{n} \sum _{i=1}^{n} (y_{i} - \hat{f}(x_{i}))^2
+
+
 
 
 
