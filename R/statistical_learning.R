@@ -68,6 +68,28 @@ clusplot(dat, clus$cluster, color=TRUE, shade=TRUE,
 ### MSE: MSE = \frac{1}{n} \sum _{i=1}^{n} (y_{i} - \hat{f}(x_{i}))^2
 
 
+### simulate artificial data for logistic regression
+# create data
+set.seed(666)
+x1 = rnorm(0, 100)
+x2 = rnorm(100, 200)
+
+
+
+x1 = runif(100000, min=0, max=100)
+x2 = runif(100000, min=2, max=20)
+plot(x1,x2)
+
+
+z = 1 + 2*x1 + 3*x2        # linear combination with a bias
+pr = 1/(1+exp(-z))         # pass through an inv-logit function
+y = rbinom(1000,1,pr)      # bernoulli response variable
+#now feed it to glm:
+df = data.frame(y=y,x1=x1,x2=x2)
+glm( y~x1+x2,data=df,family="binomial")
+
+
+
 
 
 
