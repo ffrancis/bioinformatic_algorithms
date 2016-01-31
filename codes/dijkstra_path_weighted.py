@@ -1046,14 +1046,6 @@ def johnson(G, weight='weight'):
     It may be faster than Floyd - Warshall algorithm in sparse graphs.
     Algorithm complexity: O(V^2 * logV + V * E)
 
-    See Also
-    --------
-    floyd_warshall_predecessor_and_distance
-    floyd_warshall_numpy
-    all_pairs_shortest_path
-    all_pairs_shortest_path_length
-    all_pairs_dijkstra_path
-    bellman_ford
     """
     if not nx.is_weighted(G, weight=weight):
         raise nx.NetworkXError('Graph is not weighted.')
