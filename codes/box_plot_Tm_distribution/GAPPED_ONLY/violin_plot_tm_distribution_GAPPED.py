@@ -90,6 +90,10 @@ rect_histy = [left_h, bottom, 0.2, height]
 plt.figure(1, figsize=(8, 8), dpi=500)
 
 axScatter = plt.axes(rect_scatter)
+
+plt.xlabel('Local alignment Tm')
+plt.ylabel('HSE gap adjusted end filling Tm')
+
 axHistx = plt.axes(rect_histx)
 axHisty = plt.axes(rect_histy)
 
