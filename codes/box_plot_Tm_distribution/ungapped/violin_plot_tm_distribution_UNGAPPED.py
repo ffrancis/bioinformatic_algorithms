@@ -75,6 +75,10 @@ rect_histy = [left_h, bottom, 0.2, height]
 plt.figure(1, figsize=(8, 8), dpi=500)
 
 axScatter = plt.axes(rect_scatter)
+
+plt.xlabel('Local alignment Tm')
+plt.ylabel('HSE end filling Tm')
+
 axHistx = plt.axes(rect_histx)
 axHisty = plt.axes(rect_histy)
 
@@ -85,6 +89,9 @@ axHisty.yaxis.set_major_formatter(nullfmt)
 # the scatter plot:
 axScatter.scatter(x, y, s=10, facecolors='none', edgecolors='black', alpha=0.1)
 
+
+
+
 # now determine nice limits by hand:
 binwidth = 5
 #binwidth = 0.25
@@ -92,8 +99,8 @@ xymax = np.max([np.max(np.fabs(x)), np.max(np.fabs(y))])
 lim = (int(xymax/binwidth) + 1) * binwidth
 
 
-#axScatter.set_xlim((-lim, lim))
-#axScatter.set_ylim((-lim, lim))
+axScatter.set_xlim((-lim, lim))
+axScatter.set_ylim((-lim, lim))
 
 
 #axScatter.set_xlim((min_Tm-10, max_Tm+10))
@@ -101,6 +108,9 @@ lim = (int(xymax/binwidth) + 1) * binwidth
 
 
 bins = np.arange(-lim, lim + binwidth, binwidth)
+
+#print bins
+
 
 
 # histogram
@@ -113,9 +123,6 @@ axHistx.set_ylim(0,20000)
 
 axHisty.set_xlim(0,20000)
 axHisty.set_ylim(axScatter.get_ylim())
-
-#print axHisty.yaxis.get_ticklabels()
-#axHisty.set_xticklabels(axHisty.yaxis.get_ticklabels(), rotation=45)
 
 plt.setp(plt.xticks()[1], rotation=270)
 
