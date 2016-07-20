@@ -28,6 +28,8 @@ from itertools import izip
 from parameters import *
 import seaborn as sns
 import copy
+from itertools import repeat
+
 
 ### FUNCTIONS
 
@@ -52,10 +54,15 @@ def pid(seq1, seq2):
 # FUNCTION TO CALCULATE GC CONTENT
 def gc_content(sequence):
     sequence = sequence.upper()
-    gc_count =  sequence.count('G')+sequence.count('C')
-    sequence_len = len(sequence)
-    gc_cont    = (float(gc_count)/sequence_len)*100
-    return round(gc_cont, 2)  
+    allowed_chars    =    set('ACGT')
+    if set(sequence.upper())    <=    allowed_chars:
+        gc_count =  sequence.count('G')+sequence.count('C')
+        sequence_len = len(sequence)
+        gc_cont    = (float(gc_count)/sequence_len)*100
+        gc_cont = round(gc_cont, 2)  
+    else:
+        gc_cont = np.nan
+    return gc_cont  
      
 # ADD ZEROS TO MISSING COORDINATES (USES start_pos, stop_pos FROM PARAMETER.PY)
 def fill_in_missing_coords(x_list, y_list):
@@ -83,6 +90,8 @@ def fill_in_missing_coords_nan(x_list, y_list):
 file_path = './'
 
 pid_threshold = 70
+
+primer_size = 25
 
 time_stamp = 'TA_2016-07-05T19_03_49_824843'        # TEST DATA 4KB LOCUS
 # time_stamp = 'TA_2016-07-12T17_04_51_600848'
@@ -167,10 +176,7 @@ index_coord_list = [primer_coord_dict[x] for x in counts_tm.index.values.tolist(
 x_list  = index_coord_list
 y_list_unsorted = counts_tm.values.tolist()
  
-original_tm_list = copy.deepcopy(y_list_unsorted )
-
-
-
+x_list_tm = copy.deepcopy(x_list)
 
 fill_in_missing_coords(x_list, y_list_unsorted)
     
@@ -190,8 +196,9 @@ counts_pid = df_f_primers['Primer'].value_counts()
 index_coord_list_pid = [primer_coord_dict[x] for x in counts_pid.index.values.tolist()]
 
 x_list_pid  = index_coord_list_pid
+x_list_pid2  = copy.deepcopy(x_list_pid)
+
 y_list_unsorted_pid = counts_pid.values.tolist()
- 
  
  
 fill_in_missing_coords(x_list_pid, y_list_unsorted_pid)
@@ -202,42 +209,78 @@ x_list_pid.sort()
 
 
 
-# GC CONTENT INFO
-# COUNT THE NUMBER OF OCCURENCE OF UNIQUE PRIMER SEQUENCES IN PRIMER COLUMN. THIS INDICATES THE NUMBER OF NON TARGET HITS EACH PRIMER HAS
-counts_pid = df_f_primers['Primer'].value_counts()
-# REPLACE THE PRIMER SEQUENCES WITH THE CORRESPONDING GENOME CORRDINATES FROM primer_coord_dict
-index_coord_list_pid = [primer_coord_dict[x] for x in counts_pid.index.values.tolist()]
-primer_list_pid = counts_pid.index.values.tolist()
-# COUNT THE NUMBER OF OCCURENCE OF UNIQUE PRIMER SEQUENCES IN PRIMER COLUMN. THIS INDICATES THE NUMBER OF NON TARGET HITS EACH PRIMER HAS
-counts_tm = df_f_primers_tm['Primer'].value_counts()
-# REPLACE THE PRIMER SEQUENCES WITH THE CORRESPONDING GENOME CORRDINATES FROM primer_coord_dict
-index_coord_list = [primer_coord_dict[x] for x in counts_tm.index.values.tolist()]
-primer_list_tm = counts_tm.index.values.tolist()
 
 
-merged_primer_list = primer_list_pid + list(set(primer_list_tm) - set(primer_list_pid))
+
+###############################
+
+# CREATE A BOOLEAN CORRESPONDING TO GC LIST BASED ON WHETHER THOSE PRIMERS WERE SELECTED OR NOT
+merged_x_list = list(set(x_list_tm) | set(x_list_pid2))
+ 
+y_bool_list = [1 for number in xrange(len(merged_x_list))]  
+
+#print len(y_bool_list)
 
 
-gc_list = [primer_gc_dict[x] for x in merged_primer_list]
+
+fill_in_missing_coords(merged_x_list, y_bool_list)
 
 
-x_list_gc  = index_coord_list_pid  # x axis data; gc_list = y axis data
-y_list_unsorted_gc = gc_list
+#print len(y_bool_list)
 
-original_gc_list = copy.deepcopy(y_list_unsorted_gc)
+
+
+y_bool_list = [x for (y,x) in sorted(zip(merged_x_list, y_bool_list))]
+merged_x_list.sort()
+
+
+###############################    
+    
 
  
-fill_in_missing_coords_nan(x_list_gc, y_list_unsorted_gc)
     
-y_list_gc = [x for (y,x) in sorted(zip(x_list_gc, y_list_unsorted_gc))]
-x_list_gc.sort()
+# GC CONTENT FROM WHOLE LOCUS
+
+### Locus file name
+locus       =    file_path + time_stamp + "_" + str(chr_no) + "_" + str(start_pos) + "_" + str((stop_pos - start_pos)+1) +"_VariantMasked.fasta"
+
+### Process input loci sequence file
+## If input file is .fasta file:
+with open (locus) as sequence_data:
+    line = sequence_data.read()
+    lines = line.split("\n")
+    input_seq = lines[1]
+    
+
+locus_gc_list = []
+for i in xrange(len(input_seq)-primer_size+1):
+    primer    = input_seq[i:i+primer_size].upper()
+    primer_gc = gc_content(primer)
+    locus_gc_list.append(primer_gc)
+    
+locus_gc_list.extend(repeat(np.nan, primer_size-1))
+    
+    
+y_list_gc = locus_gc_list
 
 
+
+
+
+
+
+
+
+
+
+###############################
+### PLOT
+###############################  
 
 
 
 plt.figure(figsize=(20,16))
-
+plt.figure(facecolor="white")
 #### Set the font dictionaries (for plot title and axis titles)
 title_font = { 'size':'20', 'color':'black', 'weight':'normal',
               'verticalalignment':'bottom'} # Bottom vertical alignment for more space
@@ -249,7 +292,6 @@ plt.rc('ytick', labelsize=20)
 
 plt.plot(x_list,y_list, color="black", label='Tm based repeats')
 plt.fill_between(x_list, y_list, color="grey")
-
 
 plt.plot(x_list_pid,y_list_pid, color="red", alpha=0.5, label= '>= ' +str(pid_threshold) + ' p_id based repeats')
 plt.fill_between(x_list_pid,y_list_pid, color="red", alpha=0.3)
@@ -267,28 +309,34 @@ plt.savefig('Tm_pid_hits_plot.png', dpi=300)
 
 ############ TWO Y AXIS ##############
 
-# plt = plt.figure(figsize=(20,16))
-# plt = plt.ticklabel_format(useOffset=False, style='plain')
-# fig, ax1 = plt.subplots()
-# fig, ax1 = plt.subplots(figsize=(20,16))
+
+
+
 fig, ax1 = plt.subplots(figsize=(20,16))
 
+ax1.grid(False)
+
+
+
 ax2 = ax1.twinx()
+ax2.grid(False)
+
 ax1.plot(x_list,y_list, color="black")
 ax1.plot(x_list_pid,y_list_pid, color="red", alpha=0.5)
 ax1.ticklabel_format(useOffset=False, style='plain')
 
-ax2.plot(x_list_gc, y_list_gc, color="blue", alpha=0.5)
-ax2.set_ylim([0,65]) 
+#ax2.plot(x_list_gc, y_list_gc, color="blue", alpha=0.5)
+ax2.scatter(x_list, y_list_gc, color="blue", alpha=0.5)
+#ax2.set_ylim([0,65]) 
 
 
 ax2.ticklabel_format(useOffset=False, style='plain')
 
 
 
-ax1.set_xlabel('Genome coordinates')
-ax1.set_ylabel('# repeats', color="black")
-ax2.set_ylabel('GC %', color='b')
+ax1.set_xlabel('Genome coordinates', fontsize=30)
+ax1.set_ylabel('# repeats', color="black", fontsize=30)
+ax2.set_ylabel('GC %', color='b', fontsize=30)
 
 # plt.show()
 plt.savefig('Tm_pid_hits_plot_gc.png', dpi=300)
@@ -304,16 +352,40 @@ plt.savefig('Tm_pid_hits_plot_gc.png', dpi=300)
 with open('plottting_data.csv', 'wb') as f:
     writer = csv.writer(f)
     # writer.writerows(izip(x_list, y_list_pid, y_list))
-    writer.writerow(('Genome_coordinates', '70pid_hits', '10Tm_difference_hits'))
-    writer.writerows(izip(x_list, y_list_pid, y_list))
+    writer.writerow(('Genome_coordinates', '70pid_hits', '10Tm_difference_hits', 'GC content', 'primers_designed'))
+    writer.writerows(izip(x_list, y_list_pid, y_list, y_list_gc, y_bool_list))
 
     
 
+#x = y_list_gc
+#y = y_list
+#
+#
+#
+#y = y[~np.isnan(x)]
+#x = x[~np.isnan(x)]
+#
+#
+#print len(x), len(y)
+
+
+
     
+#x = np.arange(0, 10, 0.01)
+#ytrue = np.exp(-x / 5) + 2 * np.sin(x / 3)
+#y = ytrue + np.random.normal(size=len(x))
+#
+#sns.regplot(x, y, lowess=True) 
+#plt.savefig('tm_gc', dpi=300) 
     
-    
-    
-    
+
+
+
+
+
+
+
+
     
     
 ############################################################
