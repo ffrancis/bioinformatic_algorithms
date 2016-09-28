@@ -105,12 +105,14 @@ max_all     = max(max_list) +10
 
 
 #fig = plt.figure()
-fig = plt.figure(figsize=(13, 9), dpi=500)
+#fig = plt.figure(figsize=(13, 9), dpi=500)
+fig = plt.figure(figsize=(6, 5), dpi=400)
 ax = fig.add_subplot(111)
 sm.graphics.violinplot(list, ax=ax, plot_opts={'violin_fc':'grey', 'violin_alpha':0.25, 'violin_width':1, 'cutoff_val': 2})
 #sm.graphics.violinplot(list, ax=ax, plot_opts={'violin_fc':'grey', 'violin_alpha':0.25, 'violin_width':1})
 
-plt.xticks([1, 2, 3, 4], ['Ungapped local', 'Ungapped end-filled', 'Gapped local', 'Gap adjusted & end-filled'])
+#plt.xticks([1, 2, 3, 4], ['Ungapped local', 'Ungapped end-filled', 'Gapped local', 'Gap adjusted & end-filled'])
+plt.xticks([1, 2, 3, 4], ['Local', 'HSE', 'Local', 'HSE'])
 #plt.title("Comparison of Tm from Local alignment vs End filling")
 plt.ylim([min_all, max_all])
 #plt.xlim(.8,2.2)
@@ -119,9 +121,11 @@ plt.ylabel("Tm")
 
 plt.plot((2.5, 2.5), (min_all, max_all), 'k-')
 
+
+
 #plt.show()
 
-fig.savefig('all_four_violin.png', dpi=500)
+fig.savefig('all_four_violin_text_box.png', dpi=500)
 
 
 

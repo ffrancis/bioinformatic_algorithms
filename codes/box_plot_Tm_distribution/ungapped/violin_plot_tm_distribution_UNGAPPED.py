@@ -16,6 +16,7 @@ from matplotlib.ticker import NullFormatter
 
 
 
+
 # input_file  = 'Tm_values.txt'
 # input_file  = 'Tm_values_nogap.txt'
 input_file  = 'Tm_values_UNgapped_only.txt'
@@ -72,12 +73,16 @@ rect_histy = [left_h, bottom, 0.2, height]
 
 # start with a rectangular Figure
 #plt.figure(1, figsize=(12, 12))
-plt.figure(1, figsize=(8, 8), dpi=500)
+plt.figure(1, figsize=(7.5, 7.5), dpi=400)
 
 axScatter = plt.axes(rect_scatter)
 
-plt.xlabel('Local alignment Tm')
-plt.ylabel('HSE end filling Tm')
+#plt.xlabel('Local alignment Tm')
+#plt.ylabel('HSE Tm')
+
+
+plt.xlabel('Local alignment ' r'$T_{m}$')
+plt.ylabel('HSE ' r'$T_{m}$')
 
 axHistx = plt.axes(rect_histx)
 axHisty = plt.axes(rect_histy)
@@ -87,7 +92,7 @@ axHistx.xaxis.set_major_formatter(nullfmt)
 axHisty.yaxis.set_major_formatter(nullfmt)
 
 # the scatter plot:
-axScatter.scatter(x, y, s=10, facecolors='none', edgecolors='black', alpha=0.1)
+axScatter.scatter(x, y, s=6, facecolors='none', edgecolors='black', alpha=0.1)
 
 
 
@@ -129,7 +134,7 @@ plt.setp(plt.xticks()[1], rotation=270)
 
 
 #plt.show()
-plt.savefig('ungapped_scatter.png', dpi=500)
+plt.savefig('ungapped_scatter2.png', dpi=500)
 
 
 
