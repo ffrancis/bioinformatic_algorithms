@@ -1,6 +1,10 @@
-### repeat quantification ofa genomic locus, for every non overlapping 25bp kmers.
-### input files are the TA PSE module outputs (for exact match and no exact match options)
-### quantifies the repeat count based on thermoalignment Tm and also based on number of mismatches
+### repeat quantifciation
+### Only 25 kb primers will be selected
+### Only ones with Tm difference <10C will be counted.
+### The center point of the 25 bp primer will be used as the coordinate...so 13th bp position.
+### TIMESTAMP_HSE_out1_1.csv has the alignments for the + strand primers.
+### TIMESTAMP_HSE_out3_1.csv has the coordinate information for these primers.
+
 
 
 ############################################################
@@ -85,22 +89,22 @@ def remove_undesired_coords(x_list, y_list):
 # file_path = './'
 # directory_name = "qMDR_7_128386997_50394_repeats_viz_broad_param"         ### TO BE RUN
 # directory_name = "qNLB_1_25376615_22184_repeats_viz_broad_param"          ### TO BE RUN
-# directory_name = "qNLB_1_187278617_197947_viz_broad_param"                ### TO BE RUN
-directory_name = "qSLB_2_37556845_13001_viz_broad_param"
+directory_name = "qNLB_1_187278617_197947_viz_broad_param"                ### TO BE RUN
+# directory_name = "qSLB_2_37556845_13001_viz_broad_param"
 # directory_name = "qSLB_3_219917184_72001_viz_broad_param"
 # directory_name = "qSLB_6_7002788_135001_viz_broad_param"
 # directory_name = "qSLB_9_16257370_95436_viz_broad_param"
 
 
-from qSLB_2_37556845_13001_viz_broad_param.time_stamp import Time_stamp
-from qSLB_2_37556845_13001_viz_broad_param.parameters import *
+# from qSLB_2_37556845_13001_viz_broad_param.time_stamp import Time_stamp
+# from qSLB_2_37556845_13001_viz_broad_param.parameters import *
 
 # from qMDR_7_128386997_50394_repeats_viz_broad_param.time_stamp import Time_stamp
 # from qMDR_7_128386997_50394_repeats_viz_broad_param.parameters import *
 
 
-# from qNLB_1_187278617_197947_viz_broad_param.time_stamp import Time_stamp
-# from qNLB_1_187278617_197947_viz_broad_param.parameters import *
+from qNLB_1_187278617_197947_viz_broad_param.time_stamp import Time_stamp
+from qNLB_1_187278617_197947_viz_broad_param.parameters import *
 
 
 file_path_no_em = "/home/ffrancis/TA_codes_restored/LRPCR_050216/LRPCR_whole_loci/repeats_viz_100416/" + directory_name
@@ -171,13 +175,13 @@ df_f_primers['Primer'] = np.where( df_f_primers['Primer'].str.len() == 25, df_f_
 df_f_primers = df_f_primers.dropna(subset=['Primer']) 
 
 
-'''
+
 # IF PRIMER HAS NNN, REPLACE THAT PRIMER SEQUENCE WITH NaN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # s4.str.contains('A', na=False)
 df_f_primers['Primer'] = np.where( df_f_primers['Primer'].str.contains('N'),  np.nan, df_f_primers['Primer'])
 # REMOVE ROWS WITH NaN AS PRIMER SEQUENCE (PRIMER LENGTHS != 25)
 df_f_primers = df_f_primers.dropna(subset=['Primer'])
-'''
+
 
 
 
