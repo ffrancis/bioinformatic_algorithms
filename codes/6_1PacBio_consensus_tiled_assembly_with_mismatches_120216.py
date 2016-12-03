@@ -1,4 +1,4 @@
-### Demultiples and assembly of error corrected PacBio reads. 
+### Demultiplex and assemble error corrected PacBio reads. 
 ### Error corrected reads from each barcode and from each locus are pooled and assembled.
 ### Version 0.2.0: 12/02/2016
 ### Authors: Felix Francis (felixfrancier@gmail.com)
@@ -115,7 +115,6 @@ def pooled_locus_read_assembly(loci_info, primer_pairs, barcodes_list):
 
 
 
-        
 ############################################################
 #### CODE
 ############################################################
@@ -163,8 +162,10 @@ if __name__ == '__main__':
 
 
 
-    
-    
+
+
+
+
     
     
     
