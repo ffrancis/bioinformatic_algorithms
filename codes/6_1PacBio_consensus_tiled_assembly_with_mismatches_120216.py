@@ -32,12 +32,13 @@ import shutil
 
 
 primer_pairs    = "primer_pairs_info.txt"
-loci_info       = "loci_info.txt"
+barcode_list    = "smrt1_barcodes_list.txt"
 amos_path       = "/usr/local/amos/bin/"
-
+consensus_output = "./output/"
+trim_bp         = 21                           ### number of bases corresponding to padding + barcode that need to be trimmed from the amplicon consensus
 
 ### parameters
-no_reads_threshold  = 400
+no_reads_threshold  = 100
 cores               = 0        
 nthread             = 3
 
@@ -72,11 +73,13 @@ def pool_reads(primer_info_file, locus_chr_no, locus_start_pos, locus_stop_pos, 
 
 
 
+ 
+
 
 ### convert a given fasta file containing sequence reads to afg format and carry out minimus assembly.
-def minimus_assembly(locus_directory, required_barcode, amos_path):
+def minimus_assembly(barcode_directory, amos_path, consensus_output):
     ### convert fasta to afg format
-    reads = locus_directory +"reads_" + str(required_barcode)                ### same as in pool_reads function
+    reads = consensus_output + barcode_name + "/" + barcode_name + "merged_reads"
     p = sp.Popen(["%stoAmos" %amos_path,"-s","%s" %reads+".fasta", "-o", "%s" %reads+"_assembly.afg"], stdout=sp.PIPE)
     out, err = p.communicate()
     ### assemble afg reads
@@ -86,7 +89,6 @@ def minimus_assembly(locus_directory, required_barcode, amos_path):
     os.remove(reads+ "_assembly.afg.runAmos.log")
     os.remove(reads+ "_assembly.afg") 
     os.remove(reads+ "_assembly.contig") 
-
     
     
     
@@ -120,6 +122,96 @@ def pooled_locus_read_assembly(loci_info, primer_pairs, barcodes_list):
 ############################################################
 
 
+### iterate barcode
+
+### iterate primer pairs
+
+### read amplicon consensus sequence, trim barcode (search for primer sequence and trim flanking sequence)
+
+### pool all reads from each barcode
+
+### assembly
+
+
+
+primer_info_file    = primer_pairs
+
+
+
+
+
+
+df_barcodes = pd.read_csv(barcode_list, sep='\t', skiprows=0, header=0)
+for index, row in df_barcodes.iterrows():
+    barcode_name = str(row['f_barcode_name']) + "_" + str(row['r_barcode_name'])
+
+
+
+    merged_fasta = open(str(consensus_output) + barcode_name + "/"+ barcode_name + "merged_reads" +".fasta", "w")
+    df_primers = pd.read_csv(primer_info_file, sep='\t', skiprows=0, header=0)  ### read primer info
+    for index, row in df_primers.iterrows():
+        #print row
+        f_primer_name, r_primer_name =  str(row['f_primer_name']), str(row['r_primer_name'])
+        primer_chr_no, amplicon_start, amplicon_stop = int(f_primer_name.split("_")[1]), int(f_primer_name.split("_")[2]), int(r_primer_name.split("_")[2])
+        #seq_path = "./amplicon" + "_" + "_" +  str(amplicon_start) + "_" + str(amplicon_stop) + "/"
+        seq_path = str(consensus_output) + barcode_name + "/amplicon_"+ str(primer_chr_no) + "_" +  str(amplicon_start) + "_" + str(amplicon_stop) + "/"
+        #print seq_path
+        fasta_sequences = SeqIO.parse(open(seq_path + "amplicon_analysis.fasta"), 'fasta') 
+        for fasta in fasta_sequences:
+            header, sequence = fasta.id.split('_'), str(fasta.seq)
+            no_reads = int(header[3][8:])
+            if no_reads >= no_reads_threshold:
+                merged_fasta.write(">" +str(barcode_name) + "_" +str(primer_chr_no) + "_" +str(amplicon_start)+ "_" +str(amplicon_stop) + "\n")
+                merged_fasta.write(sequence[trim_bp:-trim_bp] + "\n")
+    merged_fasta.close()
+    
+    
+    
+    
+    minimus_assembly(barcode_name, amos_path, consensus_output)
+
+
+'''
+### convert fasta to afg format
+reads = consensus_output + barcode_name + "/" + barcode_name + "merged_reads"
+
+p = sp.Popen(["%stoAmos" %amos_path,"-s","%s" %reads+".fasta", "-o", "%s" %reads+"_assembly.afg"], stdout=sp.PIPE)
+out, err = p.communicate()
+### assemble afg reads
+p = sp.Popen(["%sminimus" %amos_path, "%s" %reads+"_assembly.afg"], stdout=sp.PIPE)
+out, err = p.communicate()
+shutil.rmtree(reads+ "_assembly.bnk")
+os.remove(reads+ "_assembly.afg.runAmos.log")
+os.remove(reads+ "_assembly.afg") 
+os.remove(reads+ "_assembly.contig") 
+'''
+
+#############################################
+#Time to run the code: end timer
+############################################################
+t1 = time.time()
+total = t1-t0
+total = ("{0:.2f}".format(round(total,2)))
+print "total time to run = ", total, " seconds"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 if __name__ == '__main__':
 
     #################################################
@@ -165,7 +257,6 @@ if __name__ == '__main__':
 
 
 
-
     
     
     
@@ -177,6 +268,6 @@ if __name__ == '__main__':
     total = ("{0:.2f}".format(round(total,2)))
     print "total time to run = ", total, " seconds"
 
-
+'''
 
 
