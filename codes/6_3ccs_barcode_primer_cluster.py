@@ -1,6 +1,6 @@
-### Cluster ccs read id's based on the presence of both primer pairs in the read.
+### Cluster ccs read id's based on the presence of both primer pairs and barcodes in the read.
 ### Write shell commands for error correction and consensus calling for reads from each amplicon
-### Version 0.5.0: 12/08/2016
+### Version 0.5.0: 12/19/2016
 ### Author: Felix Francis (felixfrancier@gmail.com)
 
 ############################################################
