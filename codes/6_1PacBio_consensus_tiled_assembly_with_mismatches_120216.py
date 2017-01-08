@@ -1,6 +1,6 @@
 ### Demultiplex and assemble error corrected PacBio reads. 
-### Error corrected reads from each barcode and from each locus are pooled and assembled.
-### Version 0.2.0: 12/02/2016
+### Error corrected reads from each barcode (separate directory) and from each locus are pooled and assembled.
+### Version 0.2.0: 12/19/2016
 ### Author: Felix Francis (felixfrancier@gmail.com)
 
 ############################################################
