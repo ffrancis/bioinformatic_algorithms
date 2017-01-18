@@ -27,8 +27,6 @@ t0 = time.time()
 
 
 
-
-
 input_path   =   "/mnt/data27/ffrancis/HapMap3/all_lines/"
 
 
