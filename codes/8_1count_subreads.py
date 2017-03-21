@@ -1,6 +1,6 @@
 ### get # raw reads corresponding to a set of ccs reads
 ### read alignment accuracy statistics
-### Version 0.1.0: 03/17/2017
+### Version 0.1.0: 03/20/2017
 ### Author: Felix Francis (felixfrancier@gmail.com)
 
 ############################################################
